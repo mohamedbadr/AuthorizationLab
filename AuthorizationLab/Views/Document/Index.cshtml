@@ -1,0 +1,23 @@
+﻿@using AuthorizationLab.Policies
+@using Microsoft.AspNetCore.Authorization
+@model IEnumerable<AuthorizationLab.Entities.Document>
+@inject IAuthorizationService AuthorizationService
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Document Library</h2>
+
+@{
+    var requirement = new EditRequirement();
+    foreach (var document in Model)
+    {
+        var authorizationResult = await AuthorizationService.AuthorizeAsync(User, document, requirement);
+        if (authorizationResult.Succeeded)
+        {
+            <p> @Html.ActionLink("Document #" + document.Id, "Edit", new { id = document.Id })</p>    
+        }
+        
+    }
+}
